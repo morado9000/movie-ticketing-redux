@@ -1,14 +1,28 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import './App.css';
 
 function App() {
+
+  const [movie, setMovie] = useState(null);
+
+  useEffect(() => {
+    
+
+    let getMovieBySearchTerm = async () => {
+      let res = await fetch('https://api.themoviedb.org/3/movie/550?api_key=09cb9a6c9f94cea4a897ff9b9faf68a5');
+      let json = await res.json();
+      console.log(json);
+    }
+
+    getMovieBySearchTerm();
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
