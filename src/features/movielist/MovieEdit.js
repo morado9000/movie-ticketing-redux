@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { getMovieAPI, getMovies, postMovieAPI, postShowtimeAPI } from "../../utils"
+import AlertModal  from "./AlertModal"
 
 
 export default function MovieEdit() {
@@ -11,6 +12,8 @@ export default function MovieEdit() {
     const [currScreen, setCurrScreen] = useState(1);
     const [currCapacity, setCurrCapacity] = useState(0)
     const [loading, setLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
+    const [message, setMessage] = useState("");
 
     const options = Array.from(Array(12).keys());
 
@@ -33,15 +36,16 @@ export default function MovieEdit() {
         return a-b;
     });
 
-    const submitMovie = (e) => {
+    async function submitMovie(e) {
         e.preventDefault();
         const json = JSON.parse(currMovie);
-        console.log(currDate.substring(0,11) + currTime)
-        postShowtimeAPI(`{
+        const message = await postShowtimeAPI(`{
             "screenNum": "${currScreen}",
             "capacity": ${currCapacity},
             "time": "${currDate.substring(0,11) + currTime}:00"
         }`,json.id)
+        setMessage(message.message);
+        open();
     }
 
     function handleCurrMovieChange(e) {
@@ -64,6 +68,14 @@ export default function MovieEdit() {
         setCurrCapacity(e.target.value);
     }
 
+    let open = () => {
+        setIsOpen(true);
+    }
+
+    let close = () => {
+        setIsOpen(false);
+    }
+
     useEffect(() => {
         setLoading(true);
         const myFunction = async () => {
@@ -78,59 +90,65 @@ export default function MovieEdit() {
 
     return (
         <>
-            <div className="container flex flex-col items-center justify-center mx-auto">
+            <div className="container flex flex-col items-center justify-center z-0 mx-auto">
             {loading === false ? (
-                    <form onSubmit={submitMovie}> 
-                        <div className="flex flex-col space-y-6">
+                    <>
+                        <form onSubmit={submitMovie}> 
+                            <div className="flex flex-col space-y-6">
 
-                            <select 
-                                name="movie"
-                                onChange={handleCurrMovieChange}>
-                                    <option>Pick a movie</option>
-                                    {movies.map((movie, index) => {
-                                        return <option value={JSON.stringify(movie)} key={index} >
-                                            {movie.movieName}
-                                     </option>
-                                    })}
-                            </select>
-                            <select
-                                name="screens"
-                                value={currScreen}
-                                onChange={handleCurrScreenChange}>
-                                    <option>Pick a screen</option>
-                                    {options.map((option, index) => {
-                                        return <option key={index} >
-                                            {option+1}
-                                     </option>
-                                    })}
-                            </select>
-                            <select 
-                                name="times"
-                                onChange={handleCurrDateChange}>
-                                    <option>Pick a time</option>
-                                    {dates.map((date, index) => {
-                                        return <option key={index} value={date.toISOString()} >
-                                            {date.toDateString()}
-                                     </option>
-                                    })}
-                            </select>
-                            <select 
-                                name="times"
-                                value={currTime}
-                                onChange={handleCurrTimeChange}>
-                                    <option>Pick a time</option>
-                                    {times.map((time, index) => {
-                                        return <option key={index} >
-                                            {time}
-                                     </option>
-                                    })}
-                            </select>
-                            <input type="text" placeholder="Theater Size" onChange={handleCapacityChange}/>
-                            <button>
-                                Submit
-                            </button>
-                        </div>
-                    </form>
+                                <select 
+                                    name="movie"
+                                    onChange={handleCurrMovieChange}>
+                                        <option>Pick a movie</option>
+                                        {movies.map((movie, index) => {
+                                            return <option value={JSON.stringify(movie)} key={index} >
+                                                {movie.movieName}
+                                        </option>
+                                        })}
+                                </select>
+                                <select
+                                    name="screens"
+                                    value={currScreen}
+                                    onChange={handleCurrScreenChange}>
+                                        <option>Pick a screen</option>
+                                        {options.map((option, index) => {
+                                            return <option key={index} >
+                                                {option+1}
+                                        </option>
+                                        })}
+                                </select>
+                                <select 
+                                    name="times"
+                                    onChange={handleCurrDateChange}>
+                                        <option>Pick a time</option>
+                                        {dates.map((date, index) => {
+                                            return <option key={index} value={date.toISOString()} >
+                                                {date.toDateString()}
+                                        </option>
+                                        })}
+                                </select>
+                                <select 
+                                    name="times"
+                                    value={currTime}
+                                    onChange={handleCurrTimeChange}>
+                                        <option>Pick a time</option>
+                                        {times.map((time, index) => {
+                                            return <option key={index} >
+                                                {time}
+                                        </option>
+                                        })}
+                                </select>
+                                <input type="text" placeholder="Theater Size" onChange={handleCapacityChange}/>
+                                <button>
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                        <AlertModal openState={isOpen} handleClose={close}>
+                            <p className="text-2xl">{message}</p>
+                        </AlertModal>
+                    </>
+                    
             ) : (
                 <div>
                     <p>Loading</p>
