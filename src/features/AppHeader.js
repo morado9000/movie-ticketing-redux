@@ -1,21 +1,57 @@
 import { Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux"
+import { selectLoginUser, login, logout } from "./admin/authSlice"
 
 import { default as facebook } from "../img/icon-facebook.svg";
 import { default as instagram } from "../img/icon-instagram.svg";
 import { default as pinterest } from "../img/icon-pinterest.svg";
 import { default as twitter } from "../img/icon-twitter.svg";
 import { default as youtube } from "../img/icon-youtube.svg";
+import Modal from "./movielist/Modal";
 
 
 const AppHeader = () => {
+    const logusername = useSelector(selectLoginUser);
+    const dispatch = useDispatch();
 
     const [isOpen, setIsOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [username, setUserName] = useState("");
+    const [password, setPassword] = useState("");
+
+    let open = () => {
+        setIsModalOpen(true);
+    }
+
+    let close = () => {
+        setIsModalOpen(false);
+    }
+
+    function handleUserNameChange(e) {
+        setUserName(e.target.value)
+    }
+
+    function handlePasswordChange (e) {
+        setPassword(e.target.value)
+    }
+
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+        console.log("Logging in User: " + username);
+        let user = username, pass =  password;
+        dispatch(login({username: user, password: pass}));
+        close();
+        
+    }
+
 
     return (
         <div className="flex flex-col h-screen justify-between">
-            <div className="border-solid border-b-2 border-gray bg-orange-500">
+            <div className="relative border-solid border-b-2 border-gray bg-orange-500">
             <nav className="relative container mx-auto p-5 text-white">
                 <div className="container flex flex-row items-center justify-between drop-shadow-md ">
                     <div className="pt-2">
@@ -25,6 +61,15 @@ const AppHeader = () => {
                     </div>
                     <div className="flex flex-col space-y-3 md:space-y-0 md:space-x-6 flex-row hidden md:block">
                         <Link to="/list">Home</Link>
+                        {logusername == null ? (
+                            <button onClick={open}>Login</button>
+                        ) : (
+                            <>
+                                <button>{logusername}</button>
+                                <button onClick={() => dispatch(logout())}>Logout</button>
+                            </>
+                        )}
+                        
 
                     </div>
                     <div onClick={() => setIsOpen((prev) => !prev)} className="cursor-pointer space-y-2 md:hidden">
@@ -38,6 +83,41 @@ const AppHeader = () => {
                         <Link to="/home">Home</Link>
                     </div>
             </nav>
+            <Modal openState={isModalOpen} handleClose={close}>
+                <div className="flex flex-col justify-content-center items-center">
+                    <h2 className="text-4xl mb-6">Login</h2>
+                    <form onSubmit={handleFormSubmit}>
+                        <div>
+                            <label htmlFor="username">Username: </label>
+                            <input 
+                                id="username"
+                                name="username"
+                                type="text" 
+                                placeholder="Username"  
+                                value={username}
+                                onChange={handleUserNameChange}
+                                className="rounded-full outline outline-gray-500 mb-3 p-1"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password">Password: </label>
+                            <input 
+                                id="password"
+                                name="password"
+                                type="password" 
+                                placeholder="Password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                                className="rounded-full outline outline-gray-500 mb-3 p-1"
+                            />
+                        </div>
+                        <div>
+                            <button type="submit">Go</button>
+                        </div>
+                </form>
+            </div>
+            </Modal>
+
         </div>
 
         <Outlet />

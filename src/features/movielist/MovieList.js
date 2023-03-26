@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { moviesLoadAsync, selectMovies, selectStatus } from "./movieListSlice"
 import Modal from "./Modal";
 import { Link } from "react-router-dom";
+import MovieEdit from "./MovieEdit";
 
 
 export default function MovieList() {
@@ -11,6 +12,8 @@ export default function MovieList() {
     const dispatch = useDispatch();
 
     const [isOpen, setIsOpen] = useState(false);
+    const [isEditOpen, setEditIsOpen] = useState(false);
+
     const [quantity, setQuantity] = useState(1);
     const [currMovie, setCurrMovie] = useState({});
     const [currShowTime, setCurrShowtime] = useState({});
@@ -22,6 +25,14 @@ export default function MovieList() {
 
     let close = () => {
         setIsOpen(false);
+    }
+
+    let openEdit = () => {
+        setEditIsOpen(true);
+    }
+
+    let closeEdit = () => {
+        setEditIsOpen(false);
     }
 
     var options = []; 
@@ -37,6 +48,11 @@ export default function MovieList() {
         dispatch(moviesLoadAsync());
     }, [])
 
+    useEffect(() => {
+        if(isEditOpen == false)
+            dispatch(moviesLoadAsync());
+    }, [isEditOpen])
+
     return (
         <>
            <section id="list">
@@ -49,6 +65,7 @@ export default function MovieList() {
                                             <div className="flex flex-col items-center">
                                                 <h1 className="font-bold text-2xl mt-6 mb-6">{movie.movieName}</h1>
                                                 <img className="mb-6 md:w-1/2" src={movie.posterUrl} alt="" />
+                                                <Link to="/edit" state={{myCurrMovie: movie}} className="px-6 py-6 m-3 rounded-full bg-red-500 text-white text-1xl">Add</Link>
                                             </div>
                                             <div className="flex flex-row flex-wrap content-start md:w-1/2">
                                                 {movie.showtimes.map((showtime, index) =>
@@ -62,22 +79,28 @@ export default function MovieList() {
                                 </div>
 
                                 <Modal openState={isOpen} handleClose={close}>
-                                    <h1 className="font-bold text-1xl mt-6 mb-6">{currMovie.movieName}</h1>
-                                    <img className="md:w-1/2" src={currMovie.posterUrl} alt="" />
-                                    <div className="flex flex-row flex-wrap items-center text-center justify-center px-6 mx-auto md:w-1/2">
-                                        <p className="mx-3 text-1xl font-bold">{(new Date(currShowTime.time)).toLocaleTimeString()}</p>
-                                        <p className="mx-3 text-1xl font-bold">Seats left: {currShowTime.capacity}</p>
-                                        <p className="mx-3 text-1xl font-bold">Tickets</p>
-                                        <select 
-                                            name="quantity" 
-                                            value={quantity} 
-                                            onChange={handleQuantityChange}>
-                                            {options}
-                                        </select>
-                                        <div className="px-6 py-6 my-3 mx-3 rounded-full bg-orange-500 text-white">
-                                            <Link to="/checkout" state={{movieName: currMovie.movieName, price:10.00, ticketNum:quantity, theater:currShowTime.screen, time:(new Date(currShowTime.time)).toLocaleTimeString() }}>Checkout</Link>
+                                    <div className="flex flex-col justify-center items-center">
+                                        <h1 className="font-bold text-1xl mt-6 mb-6">{currMovie.movieName}</h1>
+                                        <img className="md:w-1/2" src={currMovie.posterUrl} alt="" />
+                                            <p className="mx-3 text-1xl font-bold">{(new Date(currShowTime.time)).toLocaleTimeString()}</p>
+                                            <p className="mx-3 text-1xl font-bold">Seats left: {currShowTime.capacity}</p>
+                                        <div className="flex flex-row items-center text-center justify-center px-6 mx-auto md:w-1/2">
+                                            <p className="mx-3 text-1xl font-bold">Tickets</p>
+                                            <select 
+                                                name="quantity" 
+                                                value={quantity} 
+                                                onChange={handleQuantityChange}>
+                                                {options}
+                                            </select>
+                                            <div className="px-6 py-3 my-3 mx-3 rounded-full bg-orange-500 text-white">
+                                                <Link to="/checkout" state={{movieName: currMovie.movieName, price:10.00, ticketNum:quantity, theater:currShowTime.screen, time:(new Date(currShowTime.time)).toLocaleTimeString() }}>Checkout</Link>
+                                            </div>
                                         </div>
                                     </div>
+                                 </Modal>
+
+                                 <Modal openState={isEditOpen} handleClose={closeEdit}>
+                                    <MovieEdit currMovie={currMovie} />
                                  </Modal>
                             </>
                         ) : (

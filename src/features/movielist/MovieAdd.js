@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { getMovies, postMovieAPI } from "../../utils"
-import AlertModal from "./AlertModal";
+import Modal from "./Modal";
 
 
 export default function MovieAdd() {
@@ -10,12 +10,9 @@ export default function MovieAdd() {
     const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState("");
 
-    const MOVIEDB_KEY = process.env.MOVIEDB_KEY;
-
     async function submitMovie(e) {
         e.preventDefault();
         const json = JSON.parse(e.target.value)
-        console.log(json);
         const message = await postMovieAPI(`{
             "movieName": "${json.title}",
             "posterUrl": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2${json.posterUrl}"
@@ -74,12 +71,12 @@ export default function MovieAdd() {
 
                                 <button className="p-3 bg-orange-500 text-white" onClick={generateAll}>Generate All</button>
                             </>
-                            <AlertModal openState={isOpen} handleClose={close}>
+                            <Modal openState={isOpen} handleClose={close}>
                                 <div className="flex flex-col flex-wrap justify-center items-center">
                                     <p className="text-2xl">{message}</p>
                                 </div>
                                     
-                            </AlertModal>
+                            </Modal>
                         </>
                             
             ) : (

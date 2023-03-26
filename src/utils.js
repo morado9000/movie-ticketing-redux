@@ -1,7 +1,6 @@
 export const getMovies = async () => {
     let res = await fetch('/moviedb');
     let json = await res.json();
-    console.log("res" + json);
     return json.results;
 }
 
@@ -24,13 +23,36 @@ export const postShowtimeAPI = async (req, movie_id) => {
     return json;
 }
 
+export const deleteShowtimeAPI = async (id) => {
+    let res = await fetch("/api/v1/showtime/" + id, {
+        method: 'DELETE',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+     });
+    return res;
+}
+
 export const getMovieAPI = async() => {
     let res = await fetch("/api/v1/movie", {
         method: "GET",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
-        },
+        }
+    });
+    let json = await res.json();
+    return json;
+}
+
+export const getMovieAPIById = async(id) => {
+    let res = await fetch("/api/v1/movie/" + id, {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
     });
     let json = await res.json();
     return json;
@@ -47,4 +69,15 @@ export const postMovieAPI = async(req) => {
     });
     let json = await res.json();
     return json;
+}
+
+export const deleteMovieAPI = async(id) => {
+    let res = await fetch("/api/v1/movie/" + id, {
+        method: "DELETE",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    });
+    return res;
 }
