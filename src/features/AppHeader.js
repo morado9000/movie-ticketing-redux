@@ -41,7 +41,7 @@ const AppHeader = () => {
                     </div>
                     <div className="flex flex-col space-y-3 md:space-y-0 md:space-x-6 flex-row hidden md:block">
                         <Link to="/list">Home</Link>
-                        {loginUser == null ? (
+                        {loginUser == "" ? (
                             <button onClick={open}>Login</button>
                         ) : (
                             <>

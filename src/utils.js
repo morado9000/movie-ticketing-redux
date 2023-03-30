@@ -10,6 +10,8 @@ export const getAPI = async () => {
     return json;
 }
 
+
+
 export const postShowtimeAPI = async (req, movie_id) => {
     let res = await fetch("/api/v1/showtime/" + movie_id, {
         method: 'POST',
@@ -71,6 +73,27 @@ export const getMovieAPIById = async(id) => {
         }
     });
     let json = await res.json();
+    return json;
+}
+
+export const getMoviesByDateAPI = async (date) => {
+    let res = await fetch('api/v1/movie/filter/date/' + date);
+    let json = await res.json();
+    json.sort((a,b) => {
+        b.showtimes.sort((a,b) => {
+            return new Date(a.date + 'T' + a.time)- new Date(b.date + 'T' + b.time);
+        });
+        const nameA = a.movieName.toUpperCase();
+        const nameB = b.movieName.toUpperCase();
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+        return 1;
+        }
+        
+        return 0;
+    })
     return json;
 }
 

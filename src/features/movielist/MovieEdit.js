@@ -34,7 +34,7 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
 
     const dates = new Array();
     const date = new Date();
-    dates.push(date);
+    dates.push(new Date());
     for(let i=1; i<20; i++){
         date.setDate(date.getDate() + 1)
         dates.push(new Date(date));

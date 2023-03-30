@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getMovieAPI } from "../../utils";
+import { getMovieAPI, getMoviesByDateAPI } from "../../utils";
 
 const initialState = {
     movies: [],
@@ -10,6 +10,13 @@ export const moviesLoadAsync = createAsyncThunk(
     'movielist/getMoviesByTerm',
     async () => {
         return getMovieAPI();
+    }
+)
+
+export const moviesDateLoadAsync = createAsyncThunk(
+    'movielist/getMoviesByDate',
+    async (date) => {
+        return getMoviesByDateAPI(date);
     }
 )
 
@@ -37,6 +44,14 @@ export const movieListSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(moviesLoadAsync.fulfilled, (state, action) => {
+                state.movies = action.payload;
+                state.status="idle";
+            })
+            .addCase(moviesDateLoadAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(moviesDateLoadAsync.fulfilled, (state, action) => {
+                console.log(action.payload);
                 state.movies = action.payload;
                 state.status="idle";
             })

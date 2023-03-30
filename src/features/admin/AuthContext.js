@@ -14,7 +14,7 @@ const AuthProvider = (props) => {
         console.log("Finished")
     }
     const logout = () => {
-        setLoginUser(null);
+        setLoginUser("");
     }
 
     return (
