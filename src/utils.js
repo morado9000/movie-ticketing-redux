@@ -1,7 +1,7 @@
 export const getMovies = async () => {
     let res = await fetch('/moviedb');
     let json = await res.json();
-    return json.results;
+    return json;
 }
 
 export const getAPI = async () => {
@@ -43,6 +43,22 @@ export const getMovieAPI = async() => {
         }
     });
     let json = await res.json();
+    json.sort((a,b) => {
+        b.showtimes.sort((a,b) => {
+            return new Date(a.date + 'T' + a.time)- new Date(b.date + 'T' + b.time);
+        });
+        const nameA = a.movieName.toUpperCase();
+        const nameB = b.movieName.toUpperCase();
+        if (nameA < nameB) {
+            return -1;
+        }
+        if (nameA > nameB) {
+        return 1;
+        }
+        
+        return 0;
+    })
+    await json
     return json;
 }
 

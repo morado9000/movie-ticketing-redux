@@ -15,6 +15,7 @@ export default function MovieAdd() {
         const json = JSON.parse(e.target.value)
         const message = await postMovieAPI(`{
             "movieName": "${json.title}",
+            "movieLength": "${json.runtime}",
             "posterUrl": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2${json.posterUrl}"
         }`);
         setMessage(message.message);
@@ -25,6 +26,7 @@ export default function MovieAdd() {
         for(let movie of movies) {
             postMovieAPI(`{
                 "movieName": "${movie.title}",
+                "movieLength": "${movie.runtime}",
                 "posterUrl": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2${movie.poster_path}"
             }`)
         }

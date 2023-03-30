@@ -37,8 +37,7 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
     dates.push(date);
     for(let i=1; i<20; i++){
         date.setDate(date.getDate() + 1)
-        const newDate = new Date(date);
-        dates.push(newDate);
+        dates.push(new Date(date));
     }
     dates.sort((a,b) =>{
         return a-b;
@@ -64,7 +63,8 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
         const message = await postShowtimeAPI(`{
             "screenNum": "${currScreen}",
             "capacity": ${currCapacity},
-            "time": "${currDate.substring(0,11) + currTime}:00"
+            "date": "${currDate.substring(0,10)}",
+            "time": "${currTime}:00"
         }`,currMovie.id)
         setMessage(message.message);
         open();
@@ -94,6 +94,7 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
     }
 
     function handleCurrDateChange(e) {
+        console.log(e.target.value);
         setCurrDate(e.target.value);
     }
 
@@ -224,9 +225,12 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
                         </form>
                          <div className="flex flex-col content-start md:flex-row md:flex-wrap">
                             {currMovie.showtimes.map((showtime, index) =>
-                                <button onClick={() => deleteShowtimeOpen(showtime.id)} className="px-6 py-6 m-3 rounded-full bg-red-500 text-white text-1xl"
-                                    >{(new Date(showtime.time)).toLocaleTimeString()}
-                                </button>
+                                <div className="flex flex-col text-center">
+                                    <p className="mt-3">{(new Date(showtime.date + "T" + showtime.time)).toLocaleDateString()}</p>
+                                    <button onClick={() => deleteShowtimeOpen(showtime.id)} className="px-6 py-6 mb-3 mx-3 rounded-full bg-red-500 text-white text-1xl"
+                                        >{(new Date(showtime.date + "T" + showtime.time)).toLocaleTimeString()}
+                                    </button>
+                                </div>
                             )}
                          </div>
                         <Modal openState={isOpen} handleClose={() => close(currMovie.id)}>
