@@ -33,33 +33,35 @@ export default function LoginForm() {
         <div className="flex flex-col justify-content-center items-center">
                 <h2 className="text-4xl mb-6">Login</h2>
                 <form onSubmit={handleFormSubmit}>
-                    <div>
-                        <label htmlFor="username">Username: </label>
-                        <input 
-                            id="username"
-                            name="username"
-                            type="text" 
-                            placeholder="Username"  
-                            value={username}
-                            onChange={handleUserNameChange}
-                            className="rounded-full outline outline-gray-500 mb-3 p-1"
-                        />
+                    <div className="flex flex-col justify-content-center items-center">
+                        <div>
+                            <label htmlFor="username">Username: </label>
+                            <input 
+                                id="username"
+                                name="username"
+                                type="text" 
+                                placeholder="Username"  
+                                value={username}
+                                onChange={handleUserNameChange}
+                                className="rounded-full outline outline-gray-500 mb-3 p-1"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password">Password: </label>
+                            <input 
+                                id="password"
+                                name="password"
+                                type="password" 
+                                placeholder="Password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                                className="rounded-full outline outline-gray-500 mb-3 p-1"
+                            />
+                        </div>
+                        <div>
+                        <button type="submit" className="px-10 py-3 m-3 rounded-md bg-orange-500 text-white text-1xl">Go</button>
                     </div>
-                    <div>
-                        <label htmlFor="password">Password: </label>
-                        <input 
-                            id="password"
-                            name="password"
-                            type="password" 
-                            placeholder="Password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            className="rounded-full outline outline-gray-500 mb-3 p-1"
-                        />
-                    </div>
-                    <div>
-                        <button type="submit">Go</button>
-                    </div>
+                </div>
             </form>
         </div>
     )

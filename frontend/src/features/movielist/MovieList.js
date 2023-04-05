@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { moviesDateLoadAsync, moviesLoadAsync, selectMovies, selectStatus } from "./movieListSlice"
 import Modal from "./Modal";
 import { Link } from "react-router-dom";
 import MovieEdit from "./MovieEdit";
+import { AuthContext } from "../admin/AuthContext";
 
 
 export default function MovieList() {
@@ -20,6 +21,8 @@ export default function MovieList() {
     const [dates, setDates] = useState([]);
     const [currDate, setCurrDate] = useState(new Date());
     const [loadDates, setLoadDates] = useState(true);
+
+    const {loginUser} = useContext(AuthContext);
 
     let open = () => {
         setIsOpen(true);
@@ -51,6 +54,15 @@ export default function MovieList() {
     function handleCurrDateChange(newdate){
         setCurrDate(newdate)
     }
+
+    function getConsistentDate(date){
+        if(date.length == 10) {
+            return  (<>0{(date.substring(0,4))}{(date.substring(7))}</>)
+        } 
+        else {
+            return (<>{(date.substring(0,5))}{(date.substring(8))}</>)
+        }
+    }
     
     useEffect(() => {
         const loadDates = async () => {
@@ -76,12 +88,6 @@ export default function MovieList() {
     useEffect(() => {
         dispatch(moviesDateLoadAsync(currDate.toISOString().substring(0,10)))
     }, [currDate])
-
-    useEffect(() => {
-        if(status == "idle"){
-            console.log(movies);
-        }
-    }, [status])
 
     return (
         <>
@@ -111,13 +117,15 @@ export default function MovieList() {
                                             <div className="flex flex-col items-center">
                                                 <h1 className="font-bold text-2xl mt-6 mb-6">{movie.movieName}</h1>
                                                 <img className="mb-6 md:w-1/2" src={movie.posterUrl} alt="" />
-                                                <Link to="/admin/edit" state={{myCurrMovie: movie}} className="px-6 py-6 m-3 rounded-full bg-red-500 text-white text-1xl">Add</Link>
+                                                {loginUser == process.env.REACT_APP_MOVIE_USER ? (
+                                                    <Link to="/admin/edit" state={{myCurrMovie: movie}} className="px-6 py-6 m-3 rounded-full bg-red-500 text-white text-1xl">Add</Link>
+                                                ): (<></>)}  
                                             </div>
                                             <div className="flex flex-row flex-wrap content-start md:w-1/2">
                                                 {movie.showtimes.map((showtime, index) =>
                                                     <>
-                                                            <button className="px-6 py-6 m-3 rounded-full bg-orange-500 text-white text-1xl"
-                                                                onClick={() => {setCurrMovie(movie); setCurrShowtime(showtime); open();}}>{(new Date(showtime.date + "T" + showtime.time)).toLocaleTimeString()}
+                                                            <button className="p-5 m-3 bg-orange-500 text-white"
+                                                                onClick={() => {setCurrMovie(movie); setCurrShowtime(showtime); open();}}>{(getConsistentDate(new Date(showtime.date + "T" + showtime.time).toLocaleTimeString('en-US')))}
                                                             </button>
                                                         
                                                     </>
@@ -140,7 +148,7 @@ export default function MovieList() {
                                                 onChange={handleQuantityChange}>
                                                 {options}
                                             </select>
-                                            <div className="px-6 py-3 my-3 mx-3 rounded-full bg-orange-500 text-white">
+                                            <div className="p-5 m-3 bg-orange-500 text-white">
                                                 <Link to="/checkout" state={{movieName: currMovie.movieName, price:10.00, ticketNum:quantity, theater:currShowTime.screenNum, date:(new Date(currShowTime.date + "T" + currShowTime.time)).toLocaleDateString(), time:(new Date(currShowTime.date + "T" + currShowTime.time)).toLocaleTimeString() }}>Checkout</Link>
                                             </div>
                                         </div>

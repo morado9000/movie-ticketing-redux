@@ -32,6 +32,8 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
         }
     }
 
+    const screenSizes = [100, 150, 200];
+
     const dates = new Array();
     const date = new Date();
     dates.push(new Date());
@@ -161,7 +163,7 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
                                     <>
                                         <h1 className="font-bold text-2xl mt-6 mb-6">{currMovie.movieName}</h1>
                                         <img className="mb-6 md:w-1/2" src={currMovie.posterUrl} alt="" />
-                                        <button type="button" onClick={deleteOpen} className="px-6 py-6 m-3 rounded-full bg-red-500 text-white text-1xl">Delete</button>
+                                        <button type="button" onClick={deleteOpen} className="p-5 m-3 bg-red-500 text-white">Delete</button>
 
                                     </>
                                 ) : (
@@ -215,8 +217,18 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
                                         </option>
                                         })}
                                 </select>
-                                <input type="text" placeholder="Theater Size" onChange={handleCapacityChange}/>
-                                <button>
+                                <select 
+                                    name="screens"
+                                    value={currCapacity}
+                                    onChange={handleCapacityChange}>
+                                        <option>Pick a screen size</option>
+                                        {screenSizes.map((screen, index) => {
+                                            return <option key={index} >
+                                                {screen}
+                                        </option>
+                                        })}
+                                </select>
+                                <button className="p-5 m-3 bg-orange-500 text-white">
                                     Submit
                                 </button>
                             </div>
@@ -225,7 +237,7 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
                             {currMovie.showtimes.map((showtime, index) =>
                                 <div className="flex flex-col text-center">
                                     <p className="mt-3">{(new Date(showtime.date + "T" + showtime.time)).toLocaleDateString()}</p>
-                                    <button onClick={() => deleteShowtimeOpen(showtime.id)} className="px-6 py-6 mb-3 mx-3 rounded-full bg-red-500 text-white text-1xl"
+                                    <button onClick={() => deleteShowtimeOpen(showtime.id)} className="p-5 m-3 bg-red-500 text-white"
                                         >{(new Date(showtime.date + "T" + showtime.time)).toLocaleTimeString()}
                                     </button>
                                 </div>
