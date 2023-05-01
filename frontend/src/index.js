@@ -10,6 +10,7 @@ import MovieList from './features/movielist/MovieList';
 import Checkout from './features/movielist/Checkout';
 import MovieEdit from './features/movielist/MovieEdit';
 import MovieAdd from './features/movielist/MovieAdd';
+import MovieCopy from './features/movielist/MovieCopy';
 import LoginForm from './features/admin/LoginForm';
 import PrivateRoute from './features/admin/PrivateRoute';
 import { AuthProvider } from './features/admin/AuthContext';
@@ -29,6 +30,7 @@ root.render(
                   <Route path="login" element={<LoginForm />} />
                   <Route path="edit" element={<PrivateRoute><MovieEdit /></PrivateRoute>} />
                   <Route path="add" element={<PrivateRoute><MovieAdd /></PrivateRoute>} />
+                  <Route path="copy" element={<PrivateRoute><MovieCopy /></PrivateRoute>} />
                 </Route>
                 <Route index element={<Navigate to="/list" />} />
               </Route>

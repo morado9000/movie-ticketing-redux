@@ -1,5 +1,6 @@
 services:
   backend:
+    image: morado9000/movieticketing-backend
     build: backend
     ports:
       - 8080:8080
@@ -14,6 +15,7 @@ services:
       - movietickeing-postgres
       - movietickeing-react 
   api:
+    image: morado9000/movieticketing-api
     build: 
       context: api
       args:
@@ -23,13 +25,14 @@ services:
     networks:
       - movietickeing-react 
   frontend:
+    image: morado9000/movieticketing-frontend
     build:
       context: frontend
       args:
         REACT_APP_MOVIE_USER: ${REACT_APP_MOVIE_USER}
         REACT_APP_MOVIE_PASSWORD: ${REACT_APP_MOVIE_PASSWORD}
     ports:
-      - 80:80
+      - 443:443
     depends_on:
       - backend
       - api

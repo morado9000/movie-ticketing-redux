@@ -55,6 +55,27 @@ public class ShowtimeController {
         showtimeService.addNewShow(newShowtime);
     }
 
+    @ResponseStatus(value = HttpStatus.CREATED,reason = "Copy succeeded")
+    @PostMapping("copy/{oldDate}&{newDate}")
+    public void copyShowsToNewDate(@PathVariable("oldDate") LocalDate oldDate, @PathVariable("newDate") LocalDate newDate){
+        List<Showtime> showtimes = showtimeService.getShowtimeByDate(oldDate).get();
+        for(Showtime showtime : showtimes){
+            Movie movie = movieRepository.findById(showtime.getMovie().getId()).orElseThrow(
+                    () -> new IllegalStateException(("FUCK"))
+            );
+
+            Showtime newShowtime = new Showtime();
+            newShowtime.setScreenNum(showtime.getScreenNum());
+            newShowtime.setCapacity(showtime.getCapacity());
+            newShowtime.setDate(newDate);
+            newShowtime.setTime(showtime.getTime());
+            movie.getShowtimes().add(newShowtime);
+            newShowtime.setMovie(movie);
+            showtimeService.addNewShow(newShowtime);
+        }
+    }
+
+
     @ResponseStatus(value = HttpStatus.NO_CONTENT, reason = "Showtime deleted")
     @DeleteMapping(path = "{show}")
     public void deleteShow(@PathVariable("show") Long id){

@@ -25,6 +25,19 @@ export const postShowtimeAPI = async (req, movie_id) => {
     return json;
 }
 
+export const copyShowtimeAPI = async (oldDate, newDate) => {
+    let res = await fetch("/api/v1/showtime/copy/" + oldDate + "&" + newDate, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: "{}",
+     });
+    let json = await res.json();
+    return json;
+}
+
 export const deleteShowtimeAPI = async (id) => {
     let res = await fetch("/api/v1/showtime/" + id, {
         method: 'DELETE',

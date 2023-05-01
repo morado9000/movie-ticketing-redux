@@ -47,6 +47,7 @@ const AppHeader = () => {
                             <>
                                 <Link to="/admin/add">Add</Link>
                                 <Link to="/admin/edit">Edit</Link>
+                                <Link to="/admin/copy">Copy</Link>
                                 <button>{loginUser}</button>
                                 <button onClick={() => logout()}>Logout</button>
                             </>
@@ -69,6 +70,7 @@ const AppHeader = () => {
                             <>
                                 <Link to="/admin/add">Add</Link>
                                 <Link to="/admin/edit">Edit</Link>
+                                <Link to="/admin/copy">Copy</Link>
                                 <button>{loginUser}</button>
                                 <button onClick={() => logout()}>Logout</button>
                             </>
