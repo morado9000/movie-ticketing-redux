@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { moviesDateLoadAsync, moviesLoadAsync, selectMovies, selectStatus } from "./movieListSlice"
 import Modal from "./Modal";
 import { Link } from "react-router-dom";
-import MovieEdit from "./MovieEdit";
+import MovieEdit from "../admin/MovieEdit";
 import { AuthContext } from "../admin/AuthContext";
 
 
@@ -19,7 +19,7 @@ export default function MovieList() {
     const [currMovie, setCurrMovie] = useState({});
     const [currShowTime, setCurrShowtime] = useState({});
     const [dates, setDates] = useState([]);
-    const [currDate, setCurrDate] = useState(new Date());
+    const [currDate, setCurrDate] = useState(new Date(new Date().toLocaleDateString()));
     const [loadDates, setLoadDates] = useState(true);
 
     const {loginUser} = useContext(AuthContext);
@@ -67,8 +67,8 @@ export default function MovieList() {
     useEffect(() => {
         const loadDates = async () => {
             setLoadDates(true);
-            let newDates = new Array(new Date());
-            const date = new Date();
+            const date = new Date(new Date().toLocaleDateString());
+            let newDates = new Array(new Date(date));
             for(let i=1; i<20; i++){
                 date.setDate(date.getDate() + 1)
                 newDates.push(new Date(date));

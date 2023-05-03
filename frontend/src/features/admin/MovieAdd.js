@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { getMovies, postMovieAPI } from "../../utils"
-import Modal from "./Modal";
+import Modal from "../movielist/Modal";
 
 
 export default function MovieAdd() {

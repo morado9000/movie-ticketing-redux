@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom";
 import { deleteMovieAPI, deleteShowtimeAPI, getMovieAPI, getMovieAPIById, getMovies, postMovieAPI, postShowtimeAPI } from "../../utils"
-import Modal from "./Modal";
+import Modal from "../movielist/Modal";
 
 
 export default function MovieEdit({movie = {movieName: "", posterUrl: "", showtimes: [] }}) {
@@ -36,10 +36,10 @@ export default function MovieEdit({movie = {movieName: "", posterUrl: "", showti
 
     const dates = new Array();
     const date = new Date();
-    dates.push(new Date());
+    dates.push(new Date(date.toLocaleDateString()));
     for(let i=1; i<20; i++){
         date.setDate(date.getDate() + 1)
-        dates.push(new Date(date));
+        dates.push(new Date(date.toLocaleDateString()));
     }
     dates.sort((a,b) =>{
         return a-b;
